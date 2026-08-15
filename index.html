@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peluches | Pandy 🧸</title>
+
+  <!-- FUENTES DE GOOGLE -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mali:wght@700&family=Poppins:wght@400;600;700&family=Sniglet:wght@800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* COLORES BEIGE PASTEL Y VERDE PARA EL CARRITO */
+      --bg-principal: #FDFBF7;
+      --bg-beige-pastel: #F5EBE0;
+      --bg-beige-oscuro: #E3D5CA;
+      --azul-pastel: #D5BDAF;
+      --texto-oscuro: #4A3E3D;
+      --texto-gris: #7A6C65;
+      --verde-mayor: #2E7D32;
+      --verde-carrito: #25D366;
+      --verde-carrito-hover: #20BD5A;
+      --borde-suave: #D8C4B6;
+      --sombra: rgba(74, 62, 61, 0.08);
+
+      /* FUENTES */
+      --fuente-normal: 'Poppins', system-ui, -apple-system, sans-serif;
+      --fuente-burbuja: 'Sniglet', 'Mali', cursive, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--fuente-normal);
+      color: var(--texto-oscuro);
+    }
+
+    body {
+      background-image: url('imagenes/fondo.avif');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-color: var(--bg-principal);
+      padding-bottom: 80px;
+    }
+
+    .overlay-fondo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(253, 251, 247, 0.75);
+      z-index: -1;
+    }
+
+    /* BARRA SUPERIOR BEIGE PASTEL */
+    .navbar {
+      background-color: var(--bg-beige-pastel);
+      border-bottom: 2px solid var(--borde-suave);
+      padding: 12px 5%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      box-shadow: 0 2px 10px var(--sombra);
+    }
+
+    .logo-tienda {
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: var(--fuente-burbuja);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .img-logo {
+      height: 65px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    /* ENCABEZADO CON LA FRASE DEBAJO DEL TITULO */
+    .encabezado-seccion {
+      text-align: center;
+      padding: 25px 20px 10px 20px;
+    }
+
+    .encabezado-seccion h1 {
+      font-family: var(--fuente-burbuja);
+      font-size: 2.8rem;
+      color: var(--texto-oscuro);
+      margin-bottom: 5px;
+      text-shadow: 2px 2px 0px #FFF;
+    }
+
+    .frase-encabezado {
+      font-size: 0.95rem;
+      color: var(--texto-gris);
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .contenedor-buscador {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    #buscador {
+      width: 100%;
+      padding: 12px 20px;
+      border: 3px solid var(--borde-suave);
+      border-radius: 30px;
+      outline: none;
+      font-size: 1rem;
+      background-color: var(--bg-beige-pastel);
+    }
+
+    /* SECCION EN TENDENCIA CON TITULO Y BOTON DE DESPLEGAR */
+    .seccion-tendencia {
+      max-width: 1200px;
+      margin: 10px auto 25px auto;
+      padding: 0 20px;
+    }
+
+    .cabecera-tendencia {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      user-select: none;
+      width: fit-content;
+    }
+
+    .titulo-tendencia {
+      font-family: var(--fuente-burbuja);
+      font-size: 1.8rem;
+    }
+
+    /* BOTON CON FLECHA PARA MOSTRAR Y OCULTAR */
+    .btn-toggle-tendencia {
+      background-color: var(--bg-beige-pastel);
+      border: 2px solid var(--borde-suave);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.2s ease;
+      box-shadow: 0 2px 6px var(--sombra);
+    }
+
+    .btn-toggle-tendencia:hover {
+      background-color: var(--bg-beige-oscuro);
+    }
+
+    /* FLECHA GIRADA CUANDO SE OCULTA */
+    .btn-toggle-tendencia.oculto {
+      transform: rotate(180deg);
+    }
+
+    /* CONTENEDOR DEL CARRUSEL QUE SE MUESTRA / OCULTA */
+    .contenedor-carrusel {
+      position: relative;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .contenedor-carrusel.ocultar {
+      display: none;
+    }
+
+    .grid-tendencia {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 10px 5px;
+      scrollbar-width: none;
+    }
+
+    .grid-tendencia::-webkit-scrollbar {
+      display: none;
+    }
+
+    .grid-tendencia .card {
+      min-width: 200px;
+      max-width: 200px;
+      flex-shrink: 0;
+    }
+
+    /* BOTONES DE FLECHAS DE DESPLAZAMIENTO HORIZONTAL */
+    .btn-flecha {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: var(--bg-beige-pastel);
+      border: 2px solid var(--borde-suave);
+      color: var(--texto-oscuro);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-flecha:hover {
+      background-color: var(--bg-beige-oscuro);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .btn-flecha.izquierda {
+      left: -15px;
+    }
+
+    .btn-flecha.derecha {
+      right: -15px;
+    }
+
+    .contenedor-tienda {
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      gap: 25px;
+      align-items: flex-start;
+    }
+
+    /* BARRA LATERAL CON FILTROS */
+    .sidebar-filtros {
+      background-color: var(--bg-beige-pastel);
+      padding: 20px;
+      border-radius: 20px;
+      border: 2px solid var(--borde-suave);
+      box-shadow: 0 4px 12px var(--sombra);
+      width: 100%;
+    }
+
+    .sidebar-filtros h3 {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: var(--texto-oscuro);
+      border-bottom: 2px solid var(--borde-suave);
+      padding-bottom: 5px;
+      font-weight: 700;
+      font-family: var(--fuente-burbuja);
+    }
+
+    .grupo-filtro {
+      margin-bottom: 15px;
+    }
+
+    .grupo-filtro label {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--texto-gris);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .grupo-filtro select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 2px solid var(--borde-suave);
+      background-color: #FFFFFF;
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    .grid-productos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* DISEÑO NORMAL DE LA TARJETA DEL PELUCHE */
+    .card {
+      background: var(--bg-beige-pastel);
+      border-radius: 20px;
+      padding: 18px;
+      text-align: center;
+      border: 2px solid var(--borde-suave);
+      box-shadow: 0 4px 15px var(--sombra);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(213, 189, 175, 0.5);
+    }
+
+    /* INSIGNIA ARRIBA A LA IZQUIERDA: FUEGUITO 🔥 */
+    .insignia-fueguito {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #FFFFFF;
+      border-radius: 20px;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* INSIGNIA ARRIBA A LA DERECHA: DESCUENTO */
+    .insignia-descuento {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #FFFFFF;
+      border-radius: 20px;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 5;
+    }
+
+    .insignia-descuento img {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    .insignia-descuento span {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #E53935;
+    }
+
+    .card img.img-producto {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      border-radius: 15px;
+      background-color: var(--bg-beige-pastel);
+    }
+
+    .card h3 {
+      font-family: var(--fuente-burbuja);
+      font-size: 1.35rem;
+      margin: 12px 0 6px 0;
+      line-height: 1.2;
+    }
+
+    .precios-contenedor {
+      margin: 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .precio-unitario {
+      color: var(--texto-gris);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: line-through;
+    }
+
+    .precio-por-mayor {
+      color: var(--verde-mayor);
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .card .badge {
+      background-color: var(--bg-beige-oscuro);
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 10px;
+      color: var(--texto-oscuro);
+      display: inline-block;
+      margin: 2px;
+      font-weight: 600;
+    }
+
+    /* MODAL VER DETALLE DEL PRODUCTO */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-contenido {
+      background-color: var(--bg-beige-pastel);
+      border: 2px solid var(--borde-suave);
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 500px;
+      width: 100%;
+      position: relative;
+    }
+
+    .cerrar-modal {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--texto-gris);
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #modal-titulo {
+      font-family: var(--fuente-burbuja);
+      font-size: 1.8rem;
+    }
+
+    #modal-img-principal {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      border-radius: 15px;
+    }
+
+    .selector-cantidad {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .selector-cantidad button {
+      padding: 5px 15px;
+      border-radius: 10px;
+      border: 2px solid var(--borde-suave);
+      background: #FFFFFF;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .btn-agregar-modal {
+      width: 100%;
+      background-color: var(--azul-pastel);
+      color: var(--texto-oscuro);
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* BOTON FLOTANTE DEL CARRITO */
+    .btn-carrito-flotante {
+      position: fixed;
+      bottom: 50px;
+      right: 25px;
+      width: 65px;
+      height: 65px;
+      background-color: var(--verde-carrito);
+      border-radius: 50%;
+      border: 2px solid #FFFFFF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      z-index: 150;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .btn-carrito-flotante:hover {
+      transform: scale(1.08);
+      background-color: var(--verde-carrito-hover);
+    }
+
+    .icono-carrito {
+      font-size: 1.8rem;
+    }
+
+    .contador-carrito {
+      position: absolute;
+      top: -5px;
+      right: -2px;
+      background-color: #E53935;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 800;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #FFFFFF;
+    }
+
+    /* VENTANA DESPLEGABLE DEL CARRITO */
+    .desplegable-carrito {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 380px;
+      max-width: 90vw;
+      height: 100%;
+      background-color: var(--bg-beige-pastel);
+      border-left: 3px solid var(--borde-suave);
+      box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+      z-index: 180;
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .desplegable-carrito.activo {
+      right: 0;
+    }
+
+    .cabecera-carrito-desplegable {
+      padding: 20px;
+      background-color: var(--bg-beige-oscuro);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--borde-suave);
+    }
+
+    .cabecera-carrito-desplegable h2 {
+      font-family: var(--fuente-burbuja);
+      font-size: 1.4rem;
+    }
+
+    .cerrar-carrito-desplegable {
+      font-size: 1.8rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .cuerpo-carrito-desplegable {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .item-carrito-ml {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #FFFFFF;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--borde-suave);
+      margin-bottom: 12px;
+    }
+
+    .item-carrito-ml img {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .info-item-ml {
+      flex: 1;
+    }
+
+    .info-item-ml h4 {
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .info-item-ml p {
+      font-size: 0.8rem;
+      color: var(--texto-gris);
+    }
+
+    .pie-carrito-desplegable {
+      padding: 20px;
+      border-top: 2px solid var(--borde-suave);
+      background-color: var(--bg-beige-pastel);
+    }
+
+    .total-carrito-ml {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    #btn-whatsapp {
+      width: 100%;
+      background-color: var(--verde-carrito);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .footer-derechos {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--bg-beige-oscuro);
+      color: var(--texto-oscuro);
+      text-align: center;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-top: 1px solid var(--borde-suave);
+      z-index: 101;
+    }
+
+    @media (min-width: 768px) {
+      .contenedor-tienda {
+        flex-direction: row;
+      }
+      .sidebar-filtros {
+        width: 260px;
+        position: sticky;
+        top: 105px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay-fondo"></div>
+
+  <!-- BARRA SUPERIOR -->
+  <nav class="navbar">
+    <div class="logo-tienda">
+      <img src="imagenes/logo.jpeg" alt="Logo Tienda" class="img-logo" onerror="this.src='https://via.placeholder.com/65?text=Logo'">
+      <span>Peluches | Pandy</span>
+    </div>
+  </nav>
+
+  <!-- ENCABEZADO CON LA FRASE DEBAJO DEL TITULO -->
+  <div class="encabezado-seccion">
+    <h1>Catálogo de Peluches</h1>
+    <p class="frase-encabezado">"Un abrazo siempre es del tamaño adecuado." A. A. Milne</p>
+    <div class="contenedor-buscador">
+      <input type="text" id="buscador" placeholder="Buscar tu peluche favorito..." oninput="filtrarProductos()">
+    </div>
+  </div>
+
+  <!-- SECCIÓN EN TENDENCIA CON FLECHA PARA OCULTAR/MOSTRAR -->
+  <section class="seccion-tendencia">
+    <div class="cabecera-tendencia" onclick="toggleSeccionTendencia()">
+      <h2 class="titulo-tendencia">En Tendencia</h2>
+      <button class="btn-toggle-tendencia" id="btn-toggle-tendencia">▲</button>
+    </div>
+
+    <div class="contenedor-carrusel" id="contenedor-carrusel-tendencia">
+      <button class="btn-flecha izquierda" onclick="desplazarCarrusel(-1)">&#10094;</button>
+      <div class="grid-tendencia" id="catalogo-tendencia"></div>
+      <button class="btn-flecha derecha" onclick="desplazarCarrusel(1)">&#10095;</button>
+    </div>
+  </section>
+
+  <!-- CONTENEDOR TIENDA -->
+  <div class="contenedor-tienda">
+    
+    <!-- FILTROS -->
+    <aside class="sidebar-filtros">
+      <h3>Filtros</h3>
+      
+      <div class="grupo-filtro">
+        <label for="filtro-tamano">Filtrar por Tamaño</label>
+        <select id="filtro-tamano" onchange="filtrarProductos()">
+          <option value="">Todos los tamaños</option>
+          <option value="Mediano (35 cm)">Medianos (35 cm)</option>
+          <option value="Pequeño (15 cm)">Pequeños (15 cm)</option>
+          <option value="Grande (55 cm)">Grandes (55 cm)</option>
+          <option value="Llavero">Llaveros</option>
+        </select>
+      </div>
+
+      <div class="grupo-filtro">
+        <label for="filtro-origen">Origen del Producto</label>
+        <select id="filtro-origen" onchange="filtrarProductos()">
+          <option value="">Todos los orígenes</option>
+          <option value="Nacional">Nacional</option>
+          <option value="Importado">Importado</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- LISTA DE PRODUCTOS -->
+    <main class="grid-productos" id="catalogo"></main>
+
+  </div>
+
+  <!-- MODAL PARA VER PRODUCTO -->
+  <div id="modal-producto" class="modal">
+    <div class="modal-contenido">
+      <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+      <div class="modal-body">
+        <img id="modal-img-principal" src="" alt="Producto">
+        <div>
+          <h2 id="modal-titulo"></h2>
+          <div class="precios-contenedor">
+            <span id="modal-precio-unitario" class="precio-unitario"></span>
+            <span id="modal-precio-mayor" class="precio-por-mayor"></span>
+          </div>
+          <p id="modal-etiquetas" style="font-size:0.9rem; color:var(--texto-gris); margin-bottom:8px;"></p>
+          <p id="modal-descripcion" style="font-size:0.95rem; margin-bottom:10px;"></p>
+          
+          <div class="selector-cantidad">
+            <button onclick="cambiarCantidadModal(-1)">-</button>
+            <span id="modal-cantidad">1</span>
+            <button onclick="cambiarCantidadModal(1)">+</button>
+          </div>
+
+          <button id="modal-btn-agregar" class="btn-agregar-modal">Agregar al Carrito 🛒</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTON FLOTANTE DE CARRITO VERDE -->
+  <div class="btn-carrito-flotante" onclick="toggleCarrito()">
+    <span class="icono-carrito">🛒</span>
+    <div class="contador-carrito" id="contador-productos">0</div>
+  </div>
+
+  <!-- VENTANA DESPLEGABLE DEL CARRITO -->
+  <div class="desplegable-carrito" id="desplegable-carrito">
+    <div class="cabecera-carrito-desplegable">
+      <h2>Agregaste a tu carrito</h2>
+      <span class="cerrar-carrito-desplegable" onclick="toggleCarrito()">&times;</span>
+    </div>
+
+    <div class="cuerpo-carrito-desplegable" id="items-carrito"></div>
+
+    <div class="pie-carrito-desplegable">
+      <div class="total-carrito-ml">
+        <span>Total:</span>
+        <span>$<span id="total-precio">0</span></span>
+      </div>
+      <button id="btn-whatsapp" onclick="enviarWhatsApp()">Pedir por WhatsApp 💬</button>
+    </div>
+  </div>
+
+  <!-- PIE DE PAGINA -->
+  <footer class="footer-derechos">
+    © 2026 Peluches Pandy - Todos los derechos reservados.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
