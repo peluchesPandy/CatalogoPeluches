@@ -12,15 +12,23 @@
 
   <style>
     :root {
-      --bg-principal: #FDFBF7;
-      --bg-beige-pastel: #F5EBE0;
-      --bg-beige-oscuro: #E3D5CA;
-      --azul-pastel: #D5BDAF;
-      --texto-oscuro: #4A3E3D;
-      --texto-gris: #7A6C65;
+      /* PALETA DE COLORES SUAVES */
+      --blanco: #FFFFFF;
+      --bg-principal: #FAFAFA;
+      
+      --naranja-suave: #FFE5D9;
+      --naranja-borde: #FCD5CE;
+      --rosa-suave: #FEC89A;
+      --rosa-pastel: #FFD7BA;
+      --verde-suave: #E8F5E9;
+      --verde-borde: #C8E6C9;
+      --azul-suave: #E3F2FD;
+      --azul-borde: #BBDEFB;
+      
+      --texto-oscuro: #333333;
+      --texto-gris: #666666;
       --rojo-corazon: #E53935;
-      --borde-suave: #D8C4B6;
-      --sombra: rgba(74, 62, 61, 0.08);
+      --sombra: rgba(0, 0, 0, 0.04);
 
       --fuente-normal: 'Poppins', system-ui, -apple-system, sans-serif;
       --fuente-burbuja: 'Sniglet', 'Mali', cursive, sans-serif;
@@ -34,122 +42,133 @@
       color: var(--texto-oscuro);
     }
 
-    /* FONDO DE LA PÁGINA MUCHO MÁS OPACO */
     body {
-      background-color: #1a1a1a;
-      /* Subimos el valor a 0.60 para que la imagen quede bastante opaca y oscura */
-      background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.60)), 
-        url('imagenes/fondo.avif');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      padding-bottom: 80px;
+      background-color: var(--bg-principal);
+      padding-bottom: 40px;
     }
 
-    /* BARRA SUPERIOR */
-    .navbar {
-      background-color: var(--bg-beige-pastel);
-      border-bottom: 2px solid var(--borde-suave);
-      padding: 10px 4%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* CONTENEDOR DE BARRAS FIJAS SUPERIORES */
+    .header-fijo {
       position: sticky;
       top: 0;
       z-index: 90;
-      box-shadow: 0 2px 10px var(--sombra);
+      background-color: var(--blanco);
+      box-shadow: 0 2px 6px var(--sombra);
+    }
+
+    /* 1. BARRA PRINCIPAL (LOGO Y MENÚ HAMBURGUESA) */
+    .navbar-principal {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    .btn-menu-hamburguesa {
+      background: transparent;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      color: var(--texto-oscuro);
     }
 
     .logo-tienda {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
 
     .img-logo {
-      height: 42px;
+      height: 32px;
       width: auto;
       object-fit: contain;
-      border-radius: 6px;
+      border-radius: 4px;
     }
 
     .titulo-marca {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       font-weight: 800;
       font-family: var(--fuente-burbuja);
       color: var(--texto-oscuro);
     }
 
-    .nav-iconos {
+    /* 2. BARRA SECUNDARIA DELGADITA DEBAJO (ÍCONOS A LA DERECHA) */
+    .subbar-iconos {
+      padding: 4px 16px;
       display: flex;
+      justify-content: flex-end; /* ALINEA LOS ÍCONOS A LA DERECHA */
       align-items: center;
-      gap: 15px;
+      gap: 12px;
+      border-bottom: 1px solid var(--naranja-borde);
+      background-color: #FCFCFC;
     }
 
-    .btn-icon-nav {
+    .btn-icon-subbar {
       background: transparent;
       border: none;
       cursor: pointer;
       position: relative;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 4px;
       text-decoration: none;
-      padding: 2px;
+      padding: 2px 6px;
+      border-radius: 6px;
     }
 
-    /* ESTILOS PARA LAS IMÁGENES PNG DE LOS ÍCONOS DE LA BARRA */
-    .icono-png-nav {
-      width: 26px;
-      height: 26px;
+    .btn-icon-subbar:hover {
+      background-color: var(--azul-suave);
+    }
+
+    .icono-png-subbar {
+      width: 18px;
+      height: 18px;
       object-fit: contain;
     }
 
-    .icono-png-inline {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      vertical-align: middle;
+    .texto-subbar-icon {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--texto-oscuro);
     }
 
-    .btn-icon-nav .badge-count {
-      position: absolute;
-      top: -5px;
-      right: -8px;
+    .btn-icon-subbar .badge-count {
       background-color: var(--rojo-corazon);
       color: white;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: 800;
-      width: 17px;
-      height: 17px;
-      border-radius: 50%;
-      display: flex;
+      min-width: 15px;
+      height: 15px;
+      border-radius: 10px;
+      padding: 0 3px;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* ENCABEZADO CON TITULO Y FRASE (CON TEXTO BLANCO PARA MEJOR LECTURA) */
+    /* ENCABEZADO CON TÍTULO Y FRASE */
     .encabezado-seccion {
       text-align: center;
-      padding: 20px 15px 10px 15px;
+      padding: 15px 15px 10px 15px;
     }
 
     .titulo-catalogo {
       font-family: var(--fuente-burbuja);
-      font-size: 1.8rem;
-      margin-bottom: 4px;
-      color: #FFFFFF;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+      font-size: 1.6rem;
+      margin-bottom: 2px;
+      color: var(--texto-oscuro);
     }
 
     .frase-catalogo {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-style: italic;
-      color: #E0E0E0;
-      margin-bottom: 15px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+      color: var(--texto-gris);
+      margin-bottom: 12px;
     }
 
     .contenedor-buscador {
@@ -159,133 +178,70 @@
 
     #buscador {
       width: 100%;
-      padding: 10px 18px;
-      border: 2px solid var(--borde-suave);
-      border-radius: 25px;
+      padding: 8px 16px;
+      border: 1px solid var(--azul-borde);
+      border-radius: 20px;
       outline: none;
-      font-size: 0.9rem;
-      background-color: #FFFFFF;
+      font-size: 0.85rem;
+      background-color: var(--blanco);
     }
 
     .contenedor-tienda {
-      display: flex;
-      flex-direction: column;
       max-width: 1200px;
-      margin: 15px auto;
-      padding: 0 15px;
-      gap: 20px;
-    }
-
-    /* FILTROS EN CADENA (AJUSTADO Y STICKY) */
-    .sidebar-filtros {
-      background-color: var(--bg-beige-pastel);
-      padding: 15px;
-      border-radius: 15px;
-      border: 1px solid var(--borde-suave);
-      height: fit-content;
-      align-self: flex-start;
-      position: sticky;
-      top: 80px;
-      z-index: 10;
-    }
-
-    .grupo-filtro {
-      margin-bottom: 12px;
-    }
-
-    .grupo-filtro:last-child {
-      margin-bottom: 0;
-    }
-
-    .grupo-filtro label {
-      display: block;
-      font-size: 0.85rem;
-      color: var(--texto-oscuro);
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
-
-    .grupo-filtro select {
-      width: 100%;
-      padding: 9px;
-      border-radius: 8px;
-      border: 1px solid var(--borde-suave);
-      background-color: #FFFFFF;
-      outline: none;
-      font-size: 0.85rem;
-    }
-
-    .grupo-filtro select:disabled {
-      background-color: #EFEFEF;
-      cursor: not-allowed;
-      opacity: 0.6;
+      margin: 12px auto;
+      padding: 0 12px;
     }
 
     /* GRID ESTILO MINISO */
     .grid-productos {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 10px;
       width: 100%;
     }
 
     @media (min-width: 768px) {
-      .contenedor-tienda {
-        flex-direction: row;
-      }
-      .sidebar-filtros {
-        width: 250px;
-        flex-shrink: 0;
-      }
       .grid-productos {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
       }
     }
 
-    /* TARJETA DE PRODUCTO CON TRANSICIÓN SUAVE */
+    /* TARJETA DE PRODUCTO */
     .card {
-      background: #FFFFFF;
-      border-radius: 15px;
-      padding: 12px;
+      background: var(--blanco);
+      border-radius: 12px;
+      padding: 10px;
       text-align: center;
-      border: 1px solid var(--borde-suave);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border: 1px solid var(--naranja-borde);
+      box-shadow: 0 2px 6px var(--sombra);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    /* EFECTO ZOOM Y ELEVACIÓN SOLO EN PC */
-    @media (hover: hover) and (pointer: fine) {
-      .card:hover {
-        transform: translateY(-5px) scale(1.03);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      }
+      transition: transform 0.2s ease;
     }
 
     .insignia-fueguito {
       position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(255, 255, 255, 0.9);
+      top: 6px;
+      left: 6px;
+      background: var(--verde-suave);
+      border: 1px solid var(--verde-borde);
       border-radius: 50%;
-      width: 26px;
-      height: 26px;
+      width: 22px;
+      height: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       z-index: 5;
     }
 
-    /* CORAZON DELINEADO NEGRO */
     .btn-corazon-card {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: 6px;
+      right: 6px;
       background: transparent;
       border: none;
       cursor: pointer;
@@ -294,12 +250,11 @@
     }
 
     .btn-corazon-card svg {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       fill: none;
       stroke: #1A1A1A;
       stroke-width: 2;
-      transition: all 0.2s ease;
     }
 
     .btn-corazon-card.activo svg {
@@ -309,21 +264,21 @@
 
     .card img.img-producto {
       width: 100%;
-      height: 140px;
+      height: 130px;
       object-fit: contain;
-      border-radius: 10px;
+      border-radius: 8px;
     }
 
     .card h3 {
-      font-size: 0.95rem;
-      margin: 8px 0 4px 0;
+      font-size: 0.88rem;
+      margin: 6px 0 2px 0;
       font-weight: 700;
     }
 
     .card p.descripcion-corta {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--texto-gris);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -332,102 +287,57 @@
 
     /* BOTÓN LLEVAR A MI BOLSA */
     .btn-llevar {
-      background-color: var(--bg-beige-oscuro);
+      background-color: var(--naranja-suave);
       color: var(--texto-oscuro);
-      border: none;
-      padding: 8px;
-      border-radius: 20px;
-      font-size: 0.8rem;
+      border: 1px solid var(--naranja-borde);
+      padding: 6px;
+      border-radius: 16px;
+      font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
     }
 
-    .btn-llevar:hover {
-      background-color: var(--azul-pastel);
-    }
-
-    /* MODAL */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 200;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-      padding: 15px;
-    }
-
-    .modal-contenido {
-      background-color: #FFFFFF;
-      border-radius: 18px;
-      padding: 20px;
-      max-width: 380px;
-      width: 100%;
-      position: relative;
-    }
-
-    .cerrar-modal {
-      position: absolute;
-      right: 15px;
-      top: 10px;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .selector-cantidad {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      margin: 15px 0;
-    }
-
-    .selector-cantidad button {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 1px solid var(--borde-suave);
-      background: var(--bg-beige-pastel);
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    /* DESPLEGABLES */
+    /* PANELS DESPLEGABLES */
     .desplegable-panel {
       position: fixed;
       top: 0;
-      right: -100%;
-      width: 340px;
-      max-width: 85vw;
+      left: -100%;
+      width: 280px;
+      max-width: 80vw;
       height: 100%;
-      background-color: #FFFFFF;
-      box-shadow: -4px 0 15px rgba(0,0,0,0.3);
+      background-color: var(--blanco);
+      box-shadow: 4px 0 15px rgba(0,0,0,0.1);
       z-index: 180;
-      transition: right 0.3s ease;
+      transition: left 0.3s ease, right 0.3s ease;
       display: flex;
       flex-direction: column;
     }
 
+    .desplegable-panel.derecha {
+      left: auto;
+      right: -100%;
+    }
+
     .desplegable-panel.activo {
+      left: 0;
+    }
+
+    .desplegable-panel.derecha.activo {
       right: 0;
     }
 
     .cabecera-panel {
-      padding: 15px;
-      background-color: var(--bg-beige-pastel);
+      padding: 12px;
+      background-color: var(--azul-suave);
+      border-bottom: 1px solid var(--azul-borde);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--borde-suave);
     }
 
     .cuerpo-panel {
@@ -437,8 +347,80 @@
     }
 
     .pie-panel {
+      padding: 12px;
+      border-top: 1px solid var(--naranja-borde);
+    }
+
+    .grupo-filtro {
+      margin-bottom: 12px;
+    }
+
+    .grupo-filtro label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--texto-oscuro);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .grupo-filtro select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--azul-borde);
+      background-color: var(--blanco);
+      outline: none;
+      font-size: 0.8rem;
+    }
+
+    /* MODAL CANTIDAD */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
       padding: 15px;
-      border-top: 1px solid var(--borde-suave);
+    }
+
+    .modal-contenido {
+      background-color: var(--blanco);
+      border-radius: 16px;
+      padding: 16px;
+      max-width: 350px;
+      width: 100%;
+      position: relative;
+    }
+
+    .cerrar-modal {
+      position: absolute;
+      right: 12px;
+      top: 8px;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .selector-cantidad {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .selector-cantidad button {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--azul-borde);
+      background: var(--azul-suave);
+      cursor: pointer;
+      font-weight: bold;
     }
 
     .btn-accion-panel {
@@ -446,87 +428,84 @@
       background-color: #25D366;
       color: white;
       border: none;
-      padding: 10px;
-      border-radius: 10px;
+      padding: 8px;
+      border-radius: 8px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+
+    .icono-png-inline {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      vertical-align: middle;
     }
 
     .item-panel {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 0;
+      gap: 8px;
+      padding: 6px 0;
       border-bottom: 1px solid #EEE;
     }
 
     .item-panel img {
-      width: 45px;
-      height: 45px;
+      width: 40px;
+      height: 40px;
       object-fit: contain;
-    }
-
-    .footer-derechos {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: var(--bg-beige-oscuro);
-      text-align: center;
-      padding: 6px;
-      font-size: 0.75rem;
-      z-index: 80;
     }
   </style>
 </head>
 <body>
 
-  <!-- BARRA SUPERIOR -->
-  <nav class="navbar">
-    <div class="logo-tienda">
-      <img src="imagenes/logo.jpeg" alt="Logo" class="img-logo" onerror="this.src='https://via.placeholder.com/42'">
-      <span class="titulo-marca">Peluches | Pandy</span>
-    </div>
+  <!-- ENCABEZADO FIJO DE DOS BARRAS -->
+  <header class="header-fijo">
+    <!-- BARRA 1: TRES LÍNEAS + LOGO CON TÍTULO COMPLETO -->
+    <nav class="navbar-principal">
+      <button class="btn-menu-hamburguesa" onclick="toggleMenuLateral()" title="Opciones de filtro">
+        ☰
+      </button>
 
-    <div class="nav-iconos">
-      <!-- 1. WHATSAPP (imagenes/w.png) -->
-      <a class="btn-icon-nav" href="https://wa.me/573000000000" target="_blank" title="Contacto WhatsApp">
-        <img src="imagenes/w.png" alt="WhatsApp" class="icono-png-nav">
+      <div class="logo-tienda">
+        <img src="imagenes/logo.jpeg" alt="Logo" class="img-logo" onerror="this.src='https://via.placeholder.com/32'">
+        <span class="titulo-marca">Peluches | Pandy</span>
+      </div>
+    </nav>
+
+    <!-- BARRA 2: SUBBARRA DELGADITA CON ÍCONOS A LA DERECHA -->
+    <div class="subbar-iconos">
+      <!-- WHATSAPP -->
+      <a class="btn-icon-subbar" href="https://wa.me/573000000000" target="_blank" title="WhatsApp">
+        <img src="imagenes/w.png" alt="WhatsApp" class="icono-png-subbar">
+        <span class="texto-subbar-icon">WhatsApp</span>
       </a>
 
-      <!-- 2. CORAZÓN (imagenes/c.png) -->
-      <button class="btn-icon-nav" onclick="toggleFavoritos()" title="Favoritos">
-        <img src="imagenes/c.png" alt="Favoritos" class="icono-png-nav">
+      <!-- FAVORITOS -->
+      <button class="btn-icon-subbar" onclick="toggleFavoritos()" title="Favoritos">
+        <img src="imagenes/c.png" alt="Favoritos" class="icono-png-subbar">
         <span class="badge-count" id="contador-favoritos">0</span>
       </button>
 
-      <!-- 3. CARRITO (imagenes/m.png) -->
-      <button class="btn-icon-nav" onclick="toggleCarrito()" title="Mi Bolsa">
-        <img src="imagenes/m.png" alt="Carrito" class="icono-png-nav">
+      <!-- MI BOLSA -->
+      <button class="btn-icon-subbar" onclick="toggleCarrito()" title="Mi Bolsa">
+        <img src="imagenes/m.png" alt="Carrito" class="icono-png-subbar">
         <span class="badge-count" id="contador-carrito">0</span>
       </button>
     </div>
-  </nav>
+  </header>
 
-  <!-- ENCABEZADO CON TITULO Y FRASE -->
-  <div class="encabezado-seccion">
-    <h1 class="titulo-catalogo">Catálogo de Peluches</h1>
-    <p class="frase-catalogo">"Un abrazo siempre es del tamaño adecuado." A. A. Milne</p>
-
-    <div class="contenedor-buscador">
-      <input type="text" id="buscador" placeholder="¿Qué estás buscando hoy?" oninput="filtrarProductos()">
+  <!-- MENÚ LATERAL (3 LÍNEAS) -->
+  <div class="desplegable-panel" id="panel-menu-lateral">
+    <div class="cabecera-panel">
+      <h3>Opciones y Filtros</h3>
+      <span style="cursor:pointer; font-size:1.2rem;" onclick="toggleMenuLateral()">&times;</span>
     </div>
-  </div>
-
-  <!-- TIENDA Y FILTROS -->
-  <div class="contenedor-tienda">
-    
-    <!-- FILTROS AJUSTADOS Y STICKY -->
-    <aside class="sidebar-filtros">
+    <div class="cuerpo-panel">
       <div class="grupo-filtro">
         <label for="filtro-origen">Tipo de Producto</label>
         <select id="filtro-origen" onchange="alSeleccionarTipo()">
@@ -542,11 +521,22 @@
           <option value="">Primero selecciona tipo</option>
         </select>
       </div>
-    </aside>
+    </div>
+  </div>
 
-    <!-- PRODUCTOS -->
+  <!-- ENCABEZADO CON TÍTULO Y FRASE -->
+  <div class="encabezado-seccion">
+    <h1 class="titulo-catalogo">Catálogo de Peluches</h1>
+    <p class="frase-catalogo">"Un abrazo siempre es del tamaño adecuado." A. A. Milne</p>
+
+    <div class="contenedor-buscador">
+      <input type="text" id="buscador" placeholder="¿Qué estás buscando hoy?" oninput="filtrarProductos()">
+    </div>
+  </div>
+
+  <!-- TIENDA -->
+  <div class="contenedor-tienda">
     <main class="grid-productos" id="catalogo"></main>
-
   </div>
 
   <!-- MODAL CANTIDAD -->
@@ -554,7 +544,7 @@
     <div class="modal-contenido">
       <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
       <h3 id="modal-titulo" style="text-align: center;"></h3>
-      <p id="modal-descripcion" style="font-size: 0.85rem; color: var(--texto-gris); text-align: center; margin: 8px 0;"></p>
+      <p id="modal-descripcion" style="font-size: 0.8rem; color: var(--texto-gris); text-align: center; margin: 6px 0;"></p>
       
       <div class="selector-cantidad">
         <button onclick="cambiarCantidadModal(-1)">-</button>
@@ -562,17 +552,17 @@
         <button onclick="cambiarCantidadModal(1)">+</button>
       </div>
 
-      <button id="modal-btn-confirmar" class="btn-llevar" style="padding: 10px; font-size: 0.9rem;">
+      <button id="modal-btn-confirmar" class="btn-llevar" style="padding: 8px; font-size: 0.85rem;">
         Llevar a mi bolsa <img src="imagenes/m.png" alt="Carrito" class="icono-png-inline">
       </button>
     </div>
   </div>
 
   <!-- PANEL CARRITO -->
-  <div class="desplegable-panel" id="desplegable-carrito">
+  <div class="desplegable-panel derecha" id="desplegable-carrito">
     <div class="cabecera-panel">
       <h3>Mi Bolsa</h3>
-      <span style="cursor:pointer;" onclick="toggleCarrito()">&times;</span>
+      <span style="cursor:pointer; font-size:1.2rem;" onclick="toggleCarrito()">&times;</span>
     </div>
     <div class="cuerpo-panel" id="items-carrito"></div>
     <div class="pie-panel">
@@ -583,20 +573,22 @@
   </div>
 
   <!-- PANEL FAVORITOS -->
-  <div class="desplegable-panel" id="desplegable-favoritos">
+  <div class="desplegable-panel derecha" id="desplegable-favoritos">
     <div class="cabecera-panel">
       <h3 style="display: flex; align-items: center; gap: 6px;">
         Mis Favoritos <img src="imagenes/c.png" alt="Favoritos" class="icono-png-inline">
       </h3>
-      <span style="cursor:pointer;" onclick="toggleFavoritos()">&times;</span>
+      <span style="cursor:pointer; font-size:1.2rem;" onclick="toggleFavoritos()">&times;</span>
     </div>
     <div class="cuerpo-panel" id="items-favoritos"></div>
   </div>
 
-  <footer class="footer-derechos">
-    © 2026 Peluches Pandy - Todos los derechos reservados.
-  </footer>
-
   <script src="app.js"></script>
+  <script>
+    function toggleMenuLateral() {
+      const panel = document.getElementById('panel-menu-lateral');
+      panel.classList.toggle('activo');
+    }
+  </script>
 </body>
 </html>
