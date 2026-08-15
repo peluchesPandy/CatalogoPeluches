@@ -177,148 +177,148 @@ const productos = [
     enTendencia: false
   }
 ];
-
 let carrito = [];
+let favoritos = [];
 let productoSeleccionado = null;
 let cantidadModal = 1;
 
-// MOSTRAR U OCULTAR LA SECCIÓN DE TENDENCIA CON LA FLECHITA
-function toggleSeccionTendencia() {
-  const contenedor = document.getElementById("contenedor-carrusel-tendencia");
-  const botonFlecha = document.getElementById("btn-toggle-tendencia");
+// MANEJO DE FILTROS PASO A PASO
+function alSeleccionarTipo() {
+  const tipo = document.getElementById("filtro-origen").value;
+  const selectTamano = document.getElementById("filtro-tamano");
 
-  contenedor.classList.toggle("ocultar");
-  botonFlecha.classList.toggle("oculto");
-}
-
-// MOSTRAR PRODUCTOS EN TENDENCIA
-function renderizarTendencias() {
-  const contenedorTendencia = document.getElementById("catalogo-tendencia");
-  contenedorTendencia.innerHTML = "";
-
-  const tendencias = productos.filter(p => p.enTendencia);
-
-  tendencias.forEach(prod => {
-    const porcentajeDescuento = Math.round(((prod.precioUnitario - prod.precioMayor) / prod.precioUnitario) * 100);
-
-    const card = document.createElement("div");
-    card.className = "card";
-    card.onclick = () => abrirModal(prod);
-
-    card.innerHTML = `
-      <!-- INSIGNIA FUEGUITO ARRIBA A LA IZQUIERDA -->
-      <div class="insignia-fueguito">🔥</div>
-
-      <!-- INSIGNIA DESCUENTO ARRIBA A LA DERECHA -->
-      <div class="insignia-descuento">
-        <img src="imagenes/descuento.png" alt="%" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879759.png'">
-        <span>-${porcentajeDescuento}%</span>
-      </div>
-
-      <img class="img-producto" src="${prod.imagen}" alt="${prod.nombre}" onerror="this.src='https://via.placeholder.com/200?text=Peluche'">
-      <h3>${prod.nombre}</h3>
-      <div class="precios-contenedor">
-        <span class="precio-unitario">$${prod.precioUnitario.toLocaleString('es-CO')}</span>
-        <span class="precio-por-mayor">$${prod.precioMayor.toLocaleString('es-CO')}</span>
-      </div>
-      <div>
-        <span class="badge">${prod.tamano}</span>
-        <span class="badge">${prod.origen}</span>
-      </div>
+  if (!tipo) {
+    selectTamano.disabled = true;
+    selectTamano.innerHTML = '<option value="">Primero selecciona tipo</option>';
+  } else {
+    selectTamano.disabled = false;
+    selectTamano.innerHTML = `
+      <option value="">Todos los tamaños</option>
+      <option value="Pequeño (15 cm)">Pequeño (15 cm)</option>
+      <option value="Mediano (35 cm)">Mediano (35 cm)</option>
+      <option value="Grande (55 cm)">Grande (55 cm)</option>
+      <option value="Llavero">Llavero</option>
     `;
+  }
 
-    contenedorTendencia.appendChild(card);
-  });
+  filtrarProductos();
 }
 
-// DESPLAZAR CARRUSEL DE TENDENCIAS LATERALMENTE
-function desplazarCarrusel(direccion) {
-  const carrusel = document.getElementById("catalogo-tendencia");
-  const desplazamiento = 220;
-  carrusel.scrollBy({
-    left: direccion * desplazamiento,
-    behavior: 'smooth'
+function filtrarProductos() {
+  const textoBuscador = document.getElementById("buscador").value.toLowerCase();
+  const origenSeleccionado = document.getElementById("filtro-origen").value;
+  const tamanoSeleccionado = document.getElementById("filtro-tamano").value;
+
+  const resultado = productos.filter(p => {
+    const coincideNombre = p.nombre.toLowerCase().includes(textoBuscador);
+    const coincideOrigen = origenSeleccionado === "" || p.origen === origenSeleccionado;
+    const coincideTamano = tamanoSeleccionado === "" || p.tamano === tamanoSeleccionado;
+
+    return coincideNombre && coincideOrigen && coincideTamano;
   });
+
+  renderizarProductos(resultado);
 }
 
-// MOSTRAR PRODUCTOS GENERALES EN EL CATÁLOGO
+// RENDERIZAR TIENDA
 function renderizarProductos(lista) {
   const catalogo = document.getElementById("catalogo");
   catalogo.innerHTML = "";
 
   if (lista.length === 0) {
-    catalogo.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: var(--texto-gris);'>No se encontraron productos.</p>";
+    catalogo.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: var(--texto-gris); padding:20px;'>No hay productos disponibles con estos filtros.</p>";
     return;
   }
 
   lista.forEach(prod => {
-    const porcentajeDescuento = Math.round(((prod.precioUnitario - prod.precioMayor) / prod.precioUnitario) * 100);
-
-    // Si es tendencia creamos el HTML del fueguito arriba a la izquierda
-    const htmlFueguito = prod.enTendencia ? `<div class="insignia-fueguito">🔥</div>` : "";
+    const esFav = favoritos.some(f => f.id === prod.id);
 
     const card = document.createElement("div");
     card.className = "card";
-    card.onclick = () => abrirModal(prod);
+
+    // SVG DEL CORAZÓN DELINEADO NEGRO EXACTO A LA IMAGEN
+    const svgCorazon = `
+      <svg viewBox="0 0 24 24">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    `;
 
     card.innerHTML = `
-      ${htmlFueguito}
+      ${prod.enTendencia ? '<div class="insignia-fueguito">🔥</div>' : ''}
+      
+      <button class="btn-corazon-card ${esFav ? 'activo' : ''}" onclick="toggleFavoritoProducto(event, ${prod.id})" title="Añadir a favoritos">
+        ${svgCorazon}
+      </button>
 
-      <!-- INSIGNIA DESCUENTO ARRIBA A LA DERECHA -->
-      <div class="insignia-descuento">
-        <img src="imagenes/descuento.png" alt="%" onerror="this.src='https://cdn-icons-png.flaticon.com/512/879/879759.png'">
-        <span>-${porcentajeDescuento}%</span>
-      </div>
-
-      <img class="img-producto" src="${prod.imagen}" alt="${prod.nombre}" onerror="this.src='https://via.placeholder.com/200?text=Peluche'">
+      <img class="img-producto" src="${prod.imagen}" alt="${prod.nombre}" onerror="this.src='https://via.placeholder.com/150'">
       <h3>${prod.nombre}</h3>
-      <div class="precios-contenedor">
-        <span class="precio-unitario">$${prod.precioUnitario.toLocaleString('es-CO')}</span>
-        <span class="precio-por-mayor">$${prod.precioMayor.toLocaleString('es-CO')}</span>
-      </div>
-      <div>
-        <span class="badge">${prod.tamano}</span>
-        <span class="badge">${prod.origen}</span>
-      </div>
+      <p class="descripcion-corta">${prod.descripcion}</p>
+
+      <button class="btn-llevar" onclick="abrirModal(${prod.id})">¡Llevátelo ahora!</button>
     `;
 
     catalogo.appendChild(card);
   });
 }
 
-// FILTRAR PRODUCTOS
-function filtrarProductos() {
-  const textoBuscador = document.getElementById("buscador").value.toLowerCase();
-  const tamanoSeleccionado = document.getElementById("filtro-tamano").value;
-  const origenSeleccionado = document.getElementById("filtro-origen").value;
+// FAVORITOS
+function toggleFavoritoProducto(event, idProd) {
+  event.stopPropagation();
+  const index = favoritos.findIndex(f => f.id === idProd);
+  const prod = productos.find(p => p.id === idProd);
 
-  const resultado = productos.filter(p => {
-    const coincideNombre = p.nombre.toLowerCase().includes(textoBuscador);
-    const coincideTamano = tamanoSeleccionado === "" || p.tamano === tamanoSeleccionado;
-    const coincideOrigen = origenSeleccionado === "" || p.origen === origenSeleccionado;
+  if (index >= 0) {
+    favoritos.splice(index, 1);
+  } else {
+    favoritos.push(prod);
+  }
 
-    return coincideNombre && coincideTamano && coincideOrigen;
-  });
-
-  renderizarProductos(resultado);
+  actualizarFavoritos();
+  filtrarProductos();
 }
 
-// MODAL PRODUCTO
-function abrirModal(producto) {
-  productoSeleccionado = producto;
+function actualizarFavoritos() {
+  document.getElementById("contador-favoritos").textContent = favoritos.length;
+  const contenedor = document.getElementById("items-favoritos");
+  contenedor.innerHTML = "";
+
+  if (favoritos.length === 0) {
+    contenedor.innerHTML = "<p style='text-align:center; font-size:0.85rem; color:var(--texto-gris); padding:15px;'>Aún no tienes favoritos</p>";
+    return;
+  }
+
+  favoritos.forEach(prod => {
+    const div = document.createElement("div");
+    div.className = "item-panel";
+    div.innerHTML = `
+      <img src="${prod.imagen}" alt="${prod.nombre}">
+      <div style="flex:1;">
+        <h4 style="font-size:0.85rem;">${prod.nombre}</h4>
+      </div>
+      <button class="btn-llevar" style="width:auto; padding:4px 8px;" onclick="abrirModal(${prod.id})">Llevar</button>
+    `;
+    contenedor.appendChild(div);
+  });
+}
+
+function toggleFavoritos() {
+  document.getElementById("desplegable-favoritos").classList.toggle("activo");
+}
+
+// MODAL LLEVAR
+function abrirModal(idProd) {
+  const prod = productos.find(p => p.id === idProd);
+  productoSeleccionado = prod;
   cantidadModal = 1;
 
-  document.getElementById("modal-titulo").innerText = producto.nombre;
-  document.getElementById("modal-img-principal").src = producto.imagen;
-  document.getElementById("modal-precio-unitario").innerText = `$${producto.precioUnitario.toLocaleString('es-CO')}`;
-  document.getElementById("modal-precio-mayor").innerText = `$${producto.precioMayor.toLocaleString('es-CO')}`;
-  document.getElementById("modal-etiquetas").innerText = `Tamaño: ${producto.tamano} | Origen: ${producto.origen}`;
-  document.getElementById("modal-descripcion").innerText = producto.descripcion;
+  document.getElementById("modal-titulo").innerText = prod.nombre;
+  document.getElementById("modal-descripcion").innerText = prod.descripcion;
   document.getElementById("modal-cantidad").innerText = cantidadModal;
 
-  document.getElementById("modal-btn-agregar").onclick = () => {
+  document.getElementById("modal-btn-confirmar").onclick = () => {
     agregarAlCarrito(productoSeleccionado, cantidadModal);
     cerrarModal();
+    toggleCarrito();
   };
 
   document.getElementById("modal-producto").style.display = "flex";
@@ -334,111 +334,69 @@ function cambiarCantidadModal(delta) {
   document.getElementById("modal-cantidad").innerText = cantidadModal;
 }
 
-// ABRIR Y CERRAR DESPLEGABLE DE CARRITO
+// CARRITO DE COMPRAS
 function toggleCarrito() {
-  const carritoElem = document.getElementById("desplegable-carrito");
-  carritoElem.classList.toggle("activo");
+  document.getElementById("desplegable-carrito").classList.toggle("activo");
 }
 
-// CARRITO Y ACTUALIZACION
 function agregarAlCarrito(producto, cantidad) {
   const existe = carrito.find(item => item.id === producto.id);
-
   if (existe) {
     existe.cantidad += cantidad;
   } else {
     carrito.push({ ...producto, cantidad });
   }
-
   actualizarCarrito();
 }
 
 function actualizarCarrito() {
-  const contenedorItems = document.getElementById("items-carrito");
-  const totalPrecioElem = document.getElementById("total-precio");
-  const contadorProductos = document.getElementById("contador-productos");
-
-  contenedorItems.innerHTML = "";
-  let total = 0;
-  let cantidadTotalProductos = 0;
-
-  if (carrito.length === 0) {
-    contenedorItems.innerHTML = '<p style="font-size:0.9rem; color:#7A6C65; text-align:center; margin-top:20px;">Aún no has agregado productos</p>';
-    totalPrecioElem.textContent = "0";
-    contadorProductos.textContent = "0";
-    return;
-  }
+  const contenedor = document.getElementById("items-carrito");
+  let totalUnidades = 0;
+  contenedor.innerHTML = "";
 
   carrito.forEach((item, index) => {
-    const precioAplicado = item.cantidad >= 3 ? item.precioMayor : item.precioUnitario;
-    const subtotal = precioAplicado * item.cantidad;
-    total += subtotal;
-    cantidadTotalProductos += item.cantidad;
-
-    const divItem = document.createElement("div");
-    divItem.className = "item-carrito-ml";
-
-    divItem.innerHTML = `
-      <img src="${item.imagen}" alt="${item.nombre}" onerror="this.src='https://via.placeholder.com/50'">
-      <div class="info-item-ml">
-        <h4>${item.nombre}</h4>
-        <p>$${precioAplicado.toLocaleString('es-CO')} c/u</p>
-        <div style="display:flex; align-items:center; gap:8px; margin-top:5px;">
-          <button onclick="modificarCantidadCarrito(${index}, -1)" style="padding:2px 8px; border-radius:6px; border:1px solid #D8C4B6; background:#FFF; cursor:pointer;">-</button>
+    totalUnidades += item.cantidad;
+    const div = document.createElement("div");
+    div.className = "item-panel";
+    div.innerHTML = `
+      <img src="${item.imagen}" alt="${item.nombre}">
+      <div style="flex:1;">
+        <h4 style="font-size:0.85rem;">${item.nombre}</h4>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+          <button onclick="modificarCantidadCarrito(${index}, -1)">-</button>
           <span>${item.cantidad}</span>
-          <button onclick="modificarCantidadCarrito(${index}, 1)" style="padding:2px 8px; border-radius:6px; border:1px solid #D8C4B6; background:#FFF; cursor:pointer;">+</button>
+          <button onclick="modificarCantidadCarrito(${index}, 1)">+</button>
         </div>
       </div>
-      <div style="font-weight: bold;">
-        $${subtotal.toLocaleString('es-CO')}
-      </div>
     `;
-
-    contenedorItems.appendChild(divItem);
+    contenedor.appendChild(div);
   });
 
-  totalPrecioElem.textContent = total.toLocaleString('es-CO');
-  contadorProductos.textContent = cantidadTotalProductos;
+  document.getElementById("contador-carrito").textContent = totalUnidades;
 }
 
 function modificarCantidadCarrito(index, cambio) {
   if (carrito[index]) {
     carrito[index].cantidad += cambio;
-
-    if (carrito[index].cantidad <= 0) {
-      carrito.splice(index, 1);
-    }
-
+    if (carrito[index].cantidad <= 0) carrito.splice(index, 1);
     actualizarCarrito();
   }
 }
 
-// ENVIAR A WHATSAPP
+// WHATSAPP
 function enviarWhatsApp() {
   if (carrito.length === 0) {
-    alert("Tu carrito está vacío.");
+    alert("Tu bolsa está vacía.");
     return;
   }
 
-  let mensaje = "¡Hola! Quisiera hacer el siguiente pedido de peluches:\n\n";
-  let total = 0;
-
+  let mensaje = "¡Hola! Quisiera solicitar el siguiente pedido:\n\n";
   carrito.forEach(item => {
-    const precioAplicado = item.cantidad >= 3 ? item.precioMayor : item.precioUnitario;
-    const subtotal = precioAplicado * item.cantidad;
-    total += subtotal;
-
-    mensaje += `• *${item.nombre}* (${item.tamano} - ${item.origen})\n  Cantidad: ${item.cantidad} - Subtotal: $${subtotal.toLocaleString('es-CO')}\n`;
+    mensaje += `• *${item.nombre}* (${item.tamano} - ${item.origen}) - Cantidad: ${item.cantidad}\n`;
   });
 
-  mensaje += `\n*Total a pagar: $${total.toLocaleString('es-CO')}*`;
-
-  const numeroTelefono = "573000000000"; 
-  const url = `https://wa.me/${numeroTelefono}?text=${encodeURIComponent(mensaje)}`;
-
-  window.open(url, "_blank");
+  window.open(`https://wa.me/573000000000?text=${encodeURIComponent(mensaje)}`, "_blank");
 }
 
-// CARGAR AL INICIAR
-renderizarTendencias();
+// INICIALIZACIÓN
 renderizarProductos(productos);
